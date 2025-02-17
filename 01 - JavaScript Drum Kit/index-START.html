@@ -58,10 +58,33 @@
   <audio data-key="75" src="sounds/tom.wav"></audio>
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
+
 <script>
 
-</script>
 
+window.addEventListener("keydown" , playSound); //按下時觸發playsound
+function playSound(e){ 
+  const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);  //找到 HTML 裡的 <audio> 標籤，並且它的 data-key 屬性值剛好等於 e.keyCode 的值
+  const key = document.querySelector(`div[data-key="${e.keyCode}"]`); //找到 HTML 裡的 <div> 標籤，並且它的 data-key 屬性值剛好等於 e.keyCode 的值
+
+  if(!audio) return; //找不到音效就結束不繼續
+  audio.currentTime = 0; //音效可以連續撥放
+  audio.play()          //執行html的音效播放器
+  key.classList.add("playing"); // key類的div 加入 playing這個css動畫
+
+  function removeTransition(e) {  //移除動畫
+        if (e.propertyName !== "transform") return; //當 transform 屬性的動畫結束時,刪除 playing class
+        this.classList.remove("playing");
+    }
+    
+    const keys = document.querySelectorAll(".key"); //找到所有 .key 按鍵，存入 keys。
+    
+    keys.forEach(key => key.addEventListener("transitionend", removeTransition)); //對每個按鍵加上監聽器，當動畫結束時，執行 removeTransition()，讓按鍵回復原狀。
+    
+}
+
+
+</script>
 
 </body>
 </html>
